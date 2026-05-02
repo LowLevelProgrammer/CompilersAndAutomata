@@ -17,3 +17,25 @@ target_include_directories(${PROJECT_NAME}
         src/utils
         src/automata/dfa
 )
+
+# Test Executable
+file(GLOB_RECURSE TEST_FILES
+    tests/*.cpp
+)
+
+# Remove src/main.cpp from test build
+list(REMOVE_ITEM SRC_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+)
+
+add_executable(tests_runner
+    ${TEST_FILES}
+    ${SRC_FILES}
+)
+
+target_include_directories(tests_runner
+    PRIVATE
+        src
+        src/utils
+        tests
+)
