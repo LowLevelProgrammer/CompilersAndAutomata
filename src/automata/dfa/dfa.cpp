@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <format>
+#include <iostream>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -17,10 +17,7 @@ void DFA::AddSymbol(char alphabet) { m_Alphabet.insert(alphabet); }
 
 void DFA::AddState(const std::string &state) { m_States.insert(state); }
 
-void DFA::SetStartState(const std::string &state) {
-  ASSERT_IN(m_States, state, "Start state not present in the set of states");
-  m_StartState = state;
-}
+void DFA::SetStartState(const std::string &state) { m_StartState = state; }
 
 void DFA::AddAcceptState(const std::string &state) {
   m_AcceptingStates.insert(state);
@@ -28,9 +25,6 @@ void DFA::AddAcceptState(const std::string &state) {
 
 void DFA::AddTransition(const std::string &currentState, const char &symbol,
                         const std::string &nextState) {
-  ASSERT_IN(m_States, currentState, "Source state does not exist");
-  ASSERT_IN(m_States, nextState, "Destination state does not exist");
-  ASSERT_IN(m_Alphabet, symbol, "Symbol not in alphabet");
   m_Transitions[currentState][symbol] = nextState;
 }
 
