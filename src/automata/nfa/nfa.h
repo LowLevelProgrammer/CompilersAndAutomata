@@ -14,7 +14,7 @@ public:
   void SetStartState(const std::string &state);
   void AddAcceptState(const std::string &state);
   void AddTransition(const std::string &currentState, const char &symbol,
-                     const std::unordered_set<std::string> nextStates);
+                     const std::unordered_set<std::string> &nextStates);
   bool Accepts(const std::string &input) const;
   void Print() const;
 

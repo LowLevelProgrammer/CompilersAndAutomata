@@ -1,30 +1,49 @@
-#include "dfa.h"
 #include <iostream>
+#include <string>
+#include <unordered_set>
+
+#include "nfa.h"
 
 int main(int argc, char *argv[]) {
+  NFA nfa;
 
-  DFA dfa;
+  nfa.AddState("q0");
+  nfa.AddState("q1");
+  nfa.AddState("q2");
 
-  dfa.AddState("q0");
-  dfa.AddState("q1");
-  dfa.AddState("q2");
+  nfa.AddSymbol('0');
+  nfa.AddSymbol('1');
 
-  dfa.AddSymbol('0');
-  dfa.AddSymbol('1');
+  nfa.SetStartState("q0");
+  nfa.AddAcceptState("q2");
 
-  dfa.SetStartState("q0");
+  std::unordered_set<std::string> q00;
+  q00.insert("$");
+  nfa.AddTransition("q0", '0', q00);
 
-  dfa.AddAcceptState("q2");
+  std::unordered_set<std::string> q01;
+  q01.insert("q0");
+  q01.insert("q1");
+  nfa.AddTransition("q0", '1', q01);
 
-  dfa.AddTransition("q0", '0', "q1");
-  dfa.AddTransition("q0", '1', "q0");
+  std::unordered_set<std::string> q10;
+  q10.insert("q1");
+  q10.insert("q2");
+  nfa.AddTransition("q1", '0', q10);
 
-  dfa.AddTransition("q1", '0', "q1");
-  dfa.AddTransition("q1", '1', "q2");
+  std::unordered_set<std::string> q11;
+  q11.insert("$");
+  nfa.AddTransition("q1", '1', q11);
 
-  dfa.AddTransition("q2", '0', "q1");
-  dfa.AddTransition("q2", '1', "q0");
+  std::unordered_set<std::string> q20;
+  q20.insert("q2");
+  nfa.AddTransition("q2", '0', q20);
 
-  std::cout << (dfa.Accepts("111") ? "True" : "False") << std::endl;
-  std::cout << (dfa.Accepts("01101") ? "True" : "False");
+  std::unordered_set<std::string> q21;
+  q21.insert("$");
+  nfa.AddTransition("q2", '1', q21);
+
+  std::cout << "Valid: " << (nfa.Validate() ? "Yes" : "No") << std::endl;
+
+  nfa.Print();
 }

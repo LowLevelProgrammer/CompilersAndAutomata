@@ -1,5 +1,10 @@
 #include "nfa.h"
 
+#include <algorithm>
+#include <format>
+#include <print>
+#include <vector>
+
 NFA::NFA() {}
 
 NFA::~NFA() {}
@@ -15,7 +20,7 @@ void NFA::AddAcceptState(const std::string &state) {
 }
 
 void NFA::AddTransition(const std::string &currentState, const char &symbol,
-                        const std::unordered_set<std::string> nextStates) {
+                        const std::unordered_set<std::string> &nextStates) {
   m_Transitions[currentState][symbol] = nextStates;
 }
 
@@ -23,7 +28,55 @@ bool NFA::Accepts(const std::string &input) const {
   std::string currentState = m_StartState;
 }
 
-void NFA::Print() const {}
+void NFA::Print() const {
+
+  std::vector<std::string> states;
+  for (const auto &state : m_States) {
+    states.push_back(state);
+  }
+  std::sort(states.begin(), states.end());
+  std::println("Set of all states: {}", states);
+
+  std::vector<char> alphabet;
+  for (const auto &symbol : m_Alphabet) {
+    alphabet.push_back(symbol);
+  }
+  std::sort(alphabet.begin(), alphabet.end());
+  std::println("Set of alphabet: {}", alphabet);
+
+  std::println("Start state: {}", m_StartState);
+
+  std::vector<std::string> acceptingStates;
+  for (const auto &acceptState : m_AcceptingStates) {
+    acceptingStates.push_back(acceptState);
+  }
+
+  std::sort(acceptingStates.begin(), acceptingStates.end());
+  std::println("Set of accepting states: {}", acceptingStates);
+
+  std::vector<std::string> transitions;
+
+  for (const auto &[source, transition] : m_Transitions) {
+    for (const auto &[symbol, nextStates] : transition) {
+      std::vector<std::string> nextStatesSet;
+
+      for (const auto &nextState : nextStates) {
+        nextStatesSet.push_back(nextState);
+      }
+      std::sort(nextStatesSet.begin(), nextStatesSet.end());
+
+      transitions.push_back(
+          std::format("({}, {}) -> {}", source, symbol, nextStatesSet));
+    }
+  }
+
+  std::sort(transitions.begin(), transitions.end());
+
+  std::println("Transition function: ");
+  for (const auto &transition : transitions) {
+    std::println("{}", transition);
+  }
+}
 
 bool NFA::Validate() const {
   // Validations
@@ -57,7 +110,9 @@ bool NFA::Validate() const {
       }
 
       for (const auto &nextState : nextStates) {
-        if (m_States.find(nextState) == m_States.end()) {
+        if (nextState == "$")
+          continue;
+        else if (m_States.find(nextState) == m_States.end()) {
           return false;
         }
       }
