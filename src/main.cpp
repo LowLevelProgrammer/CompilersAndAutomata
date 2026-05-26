@@ -1,7 +1,5 @@
-#include <iostream>
 #include <print>
 #include <string>
-#include <unordered_set>
 
 #include "nfa.h"
 
@@ -18,40 +16,48 @@ int main(int argc, char *argv[]) {
   nfa.SetStartState("q0");
   nfa.AddAcceptState("q2");
 
-  std::unordered_set<std::string> q00;
-  q00.insert("$");
-  nfa.AddTransition("q0", '0', q00);
+  nfa.AddTransition("q0", '0', {});
+  nfa.AddTransition("q0", '1', {"q0", "q1"});
 
-  std::unordered_set<std::string> q01;
-  q01.insert("q0");
-  q01.insert("q1");
-  nfa.AddTransition("q0", '1', q01);
+  nfa.AddTransition("q1", '0', {"q1", "q2"});
+  nfa.AddTransition("q1", '1', {});
 
-  std::unordered_set<std::string> q10;
-  q10.insert("q1");
-  q10.insert("q2");
-  nfa.AddTransition("q1", '0', q10);
+  nfa.AddTransition("q2", '0', {"q2"});
+  nfa.AddTransition("q2", '1', {});
 
-  std::unordered_set<std::string> q11;
-  q11.insert("$");
-  nfa.AddTransition("q1", '1', q11);
-
-  std::unordered_set<std::string> q20;
-  q20.insert("q2");
-  nfa.AddTransition("q2", '0', q20);
-
-  std::unordered_set<std::string> q21;
-  q21.insert("$");
-  nfa.AddTransition("q2", '1', q21);
-
-  std::cout << "Valid: " << (nfa.Validate() ? "Yes" : "No") << std::endl;
+  if (!nfa.Validate()) {
+    exit(EXIT_FAILURE);
+  }
 
   nfa.Print();
 
-  std::string inputString = "110";
+  std::string inputString = "0";
   std::println("Input string: {}", inputString);
-
   bool result = nfa.Accepts(inputString);
-
   std::println("String accepted by the automata: {}", result);
+
+  std::string inputString2 = "1";
+  std::println("Input string: {}", inputString2);
+  bool result2 = nfa.Accepts(inputString2);
+  std::println("String accepted by the automata: {}", result2);
+
+  std::string inputString3 = "01";
+  std::println("Input string: {}", inputString3);
+  bool result3 = nfa.Accepts(inputString3);
+  std::println("String accepted by the automata: {}", result3);
+
+  std::string inputString4 = "10";
+  std::println("Input string: {}", inputString4);
+  std::println("String accepted by the automata: {}",
+               nfa.Accepts(inputString4));
+
+  std::string inputString5 = "1110000";
+  std::println("Input string: {}", inputString5);
+  std::println("String accepted by the automata: {}",
+               nfa.Accepts(inputString5));
+
+  std::string inputString6 = "11010000";
+  std::println("Input string: {}", inputString6);
+  std::println("String accepted by the automata: {}",
+               nfa.Accepts(inputString6));
 }

@@ -41,7 +41,7 @@ bool NFA::AcceptsRecursion(const std::string &str,
   std::unordered_set<std::string> nextStates =
       m_Transitions.at(currentState).at(str[0]);
 
-  if (nextStates.size() == 1 && nextStates.contains("$")) {
+  if (nextStates.empty()) {
     return false;
   }
 
