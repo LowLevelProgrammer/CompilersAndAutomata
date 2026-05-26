@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <format>
 #include <print>
+#include <string>
+#include <unordered_set>
 #include <vector>
 
 NFA::NFA() {}
@@ -25,7 +27,33 @@ void NFA::AddTransition(const std::string &currentState, const char &symbol,
 }
 
 bool NFA::Accepts(const std::string &input) const {
-  std::string currentState = m_StartState;
+  return AcceptsRecursion(input, m_StartState);
+}
+
+bool NFA::AcceptsRecursion(const std::string &str,
+                           std::string currentState) const {
+  if (str.empty()) {
+    if (m_AcceptingStates.contains(currentState))
+      return true;
+    else
+      return false;
+  }
+  std::unordered_set<std::string> nextStates =
+      m_Transitions.at(currentState).at(str[0]);
+
+  if (nextStates.size() == 1 && nextStates.contains("$")) {
+    return false;
+  }
+
+  bool anyAccepts = false;
+  for (const auto &nextState : nextStates) {
+    bool result = AcceptsRecursion(str.substr(1), nextState);
+
+    if (result)
+      anyAccepts = true;
+  }
+
+  return anyAccepts;
 }
 
 void NFA::Print() const {

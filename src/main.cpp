@@ -1,4 +1,5 @@
 #include <iostream>
+#include <print>
 #include <string>
 #include <unordered_set>
 
@@ -46,4 +47,11 @@ int main(int argc, char *argv[]) {
   std::cout << "Valid: " << (nfa.Validate() ? "Yes" : "No") << std::endl;
 
   nfa.Print();
+
+  std::string inputString = "110";
+  std::println("Input string: {}", inputString);
+
+  bool result = nfa.Accepts(inputString);
+
+  std::println("String accepted by the automata: {}", result);
 }

@@ -33,4 +33,7 @@ private:
   std::unordered_map<std::string,
                      std::unordered_map<char, std::unordered_set<std::string>>>
       m_Transitions;
+
+private:
+  bool AcceptsRecursion(const std::string &str, std::string currentState) const;
 };
