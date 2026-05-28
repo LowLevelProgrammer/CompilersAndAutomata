@@ -38,6 +38,11 @@ bool NFA::AcceptsRecursion(const std::string &str,
     else
       return false;
   }
+
+  if (!m_Alphabet.contains(str[0])) {
+    return false;
+  }
+
   std::unordered_set<std::string> nextStates =
       m_Transitions.at(currentState).at(str[0]);
 
