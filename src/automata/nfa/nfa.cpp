@@ -138,14 +138,37 @@ bool NFA::Validate() const {
       }
 
       for (const auto &nextState : nextStates) {
-        if (nextState == "$")
-          continue;
-        else if (m_States.find(nextState) == m_States.end()) {
+        if (m_States.find(nextState) == m_States.end()) {
           return false;
         }
       }
     }
   }
 
+  return true;
+}
+
+void NFA::CompleteTransitions() {
+  for (const auto &state : m_States) {
+    if (!m_Transitions.contains(state)) {
+      m_Transitions[state] = {};
+    }
+
+    auto &transition = m_Transitions[state];
+
+    for (const auto &symbol : m_Alphabet) {
+      if (!transition.contains(symbol)) {
+        transition[symbol] = {};
+      }
+    }
+  }
+}
+
+bool NFA::Prepare() {
+  if (!Validate()) {
+    return false;
+  }
+
+  CompleteTransitions();
   return true;
 }

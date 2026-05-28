@@ -18,7 +18,7 @@ public:
   bool Accepts(const std::string &input) const;
   void Print() const;
 
-  bool Validate() const;
+  bool Prepare();
 
 private:
   // NFA (Q, Σ, q0, F, δ)
@@ -36,4 +36,6 @@ private:
 
 private:
   bool AcceptsRecursion(const std::string &str, std::string currentState) const;
+  void CompleteTransitions();
+  bool Validate() const;
 };

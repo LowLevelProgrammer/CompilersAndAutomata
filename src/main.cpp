@@ -1,9 +1,12 @@
+#include <iostream>
 #include <print>
 #include <string>
 
 #include "nfa.h"
 
 int main(int argc, char *argv[]) {
+  // NFA for accepting strings that have atleast one number of 1's followed by
+  // atleast one number of 0's i.e. (1+ 0+)
   NFA nfa;
 
   nfa.AddState("q0");
@@ -16,17 +19,14 @@ int main(int argc, char *argv[]) {
   nfa.SetStartState("q0");
   nfa.AddAcceptState("q2");
 
-  nfa.AddTransition("q0", '0', {});
   nfa.AddTransition("q0", '1', {"q0", "q1"});
 
   nfa.AddTransition("q1", '0', {"q1", "q2"});
-  nfa.AddTransition("q1", '1', {});
 
   nfa.AddTransition("q2", '0', {"q2"});
-  nfa.AddTransition("q2", '1', {});
 
-  if (!nfa.Validate()) {
-    exit(EXIT_FAILURE);
+  if (!nfa.Prepare()) {
+    std::cerr << "NFA is an invalid/not complete";
   }
 
   nfa.Print();
