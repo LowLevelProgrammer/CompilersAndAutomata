@@ -17,6 +17,7 @@ target_include_directories(${PROJECT_NAME}
         src/utils
         src/automata/dfa
         src/automata/nfa
+        src/automata/enfa
 )
 
 # Test Executable
